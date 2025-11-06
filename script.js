@@ -20,6 +20,7 @@ let posX = 0, posY = 0;
 let dragging = false;
 let startX, startY;
 
+// load file
 function loadImage(file) {
   if (!file) return;
   const reader = new FileReader();
@@ -36,9 +37,10 @@ function loadImage(file) {
   reader.readAsDataURL(file);
 }
 
+// Upload
 upload.addEventListener("change", e => loadImage(e.target.files[0]));
 
-// Drag & drop
+// Drag & Drop
 dropZone.addEventListener("click", () => upload.click());
 dropZone.addEventListener("dragover", e => {
   e.preventDefault();
@@ -61,6 +63,7 @@ document.addEventListener("paste", e => {
   }
 });
 
+// Zoom dan drag
 zoomInput.addEventListener("input", () => {
   scale = parseFloat(zoomInput.value);
   draw();
@@ -83,6 +86,7 @@ canvas.addEventListener("mousemove", e => {
 canvas.addEventListener("mouseup", () => dragging = false);
 canvas.addEventListener("mouseleave", () => dragging = false);
 
+// Gambar ulang
 function draw() {
   ctx.fillStyle = bgColorInput.value;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -98,7 +102,7 @@ function draw() {
     const coverScale = Math.max(scaleX, scaleY) * scale;
     iw = img.width * coverScale;
     ih = img.height * coverScale;
-  } else if (modeSelect.value === "contain") {
+  } else {
     const scaleX = canvas.width / img.width;
     const scaleY = canvas.height / img.height;
     const containScale = Math.min(scaleX, scaleY) * scale;
@@ -106,10 +110,11 @@ function draw() {
     ih = img.height * containScale;
   }
 
+  ctx.imageSmoothingQuality = "high";
   ctx.drawImage(img, posX - iw / 2, posY - ih / 2, iw, ih);
 }
 
-// Ambil warna dominan dari tepi gambar
+// Auto warna tepi
 autoBgBtn.addEventListener("click", () => {
   if (!img.src) return;
   const tempCanvas = document.createElement("canvas");
@@ -126,21 +131,17 @@ autoBgBtn.addEventListener("click", () => {
     edgePixels.push([imgData[idx], imgData[idx + 1], imgData[idx + 2]]);
   }
 
-  // ambil baris atas dan bawah
   for (let x = 0; x < tempCanvas.width; x++) {
     addPixel(x, 0);
     addPixel(x, tempCanvas.height - 1);
   }
-  // ambil kolom kiri dan kanan
   for (let y = 0; y < tempCanvas.height; y++) {
     addPixel(0, y);
     addPixel(tempCanvas.width - 1, y);
   }
 
   let r = 0, g = 0, b = 0;
-  edgePixels.forEach(p => {
-    r += p[0]; g += p[1]; b += p[2];
-  });
+  edgePixels.forEach(p => { r += p[0]; g += p[1]; b += p[2]; });
   r = Math.round(r / edgePixels.length);
   g = Math.round(g / edgePixels.length);
   b = Math.round(b / edgePixels.length);
@@ -149,11 +150,12 @@ autoBgBtn.addEventListener("click", () => {
   draw();
 });
 
+// Download & Clear
 downloadBtn.addEventListener("click", () => {
   const format = formatSelect.value;
   const link = document.createElement("a");
   link.download = "instagram-1080x1350" + (format === "image/png" ? ".png" : ".jpg");
-  link.href = canvas.toDataURL(format, 1.0); // kualitas maksimal
+  link.href = canvas.toDataURL(format, 1.0);
   link.click();
 });
 
