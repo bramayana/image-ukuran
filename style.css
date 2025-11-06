@@ -15,11 +15,12 @@ body {
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   text-align: center;
+  max-width: 95vw;
   width: 420px;
 }
 
 h1 {
-  font-size: 18px;
+  font-size: 1.1rem;
   margin-bottom: 10px;
 }
 
@@ -29,6 +30,7 @@ h1 {
   padding: 20px;
   background: #fafafa;
   cursor: pointer;
+  transition: 0.2s;
 }
 #dropZone.dragover {
   background: #e0f7fa;
@@ -41,6 +43,7 @@ h1 {
   background: #ddd;
   border: 2px dashed #ccc;
   max-width: 100%;
+  height: auto;
 }
 
 .controls {
@@ -52,6 +55,7 @@ h1 {
 
 .btn-group {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
 }
@@ -64,7 +68,28 @@ button {
   color: white;
   cursor: pointer;
   font-size: 14px;
+  flex: 1;
+  min-width: 130px;
 }
 button:hover {
   background: #0056b3;
 }
+
+/* Responsif untuk HP */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+  .container {
+    width: 100%;
+    padding: 15px;
+  }
+  #canvas {
+    width: 100%;
+  }
+  button {
+    font-size: 13px;
+    padding: 8px;
+  }
+}
+
